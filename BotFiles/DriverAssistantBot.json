@@ -1,0 +1,42 @@
+{
+  "$kind": "Microsoft.AdaptiveDialog",
+  "$designer": {
+    "$designer": {
+      "name": "DriverAssistantBot",
+      "description": "",
+      "id": "SiGLjN"
+    }
+  },
+  "autoEndDialog": true,
+  "defaultResultProperty": "dialog.result",
+  "triggers": [
+    {
+      "$kind": "Microsoft.OnConversationUpdateActivity",
+      "$designer": {
+        "id": "376720"
+      },
+      "actions": [
+        {
+          "$kind": "Microsoft.SendActivity",
+          "$designer": {
+            "id": "aoV0eS",
+            "name": "Send a response"
+          },
+          "activity": "${SendActivity_aoV0eS()}"
+        },
+        {
+          "$kind": "Microsoft.BeginDialog",
+          "$designer": {
+            "id": "hhDw7i"
+          },
+          "activityProcessed": true,
+          "dialog": "Menu"
+        }
+      ]
+    }
+  ],
+  "$schema": "https://raw.githubusercontent.com/microsoft/BotFramework-Composer/stable/Composer/packages/server/schemas/sdk.schema",
+  "generator": "DriverAssistantBot.lg",
+  "id": "DriverAssistantBot",
+  "recognizer": "DriverAssistantBot.lu.qna"
+}

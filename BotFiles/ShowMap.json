@@ -1,0 +1,57 @@
+{
+    "$kind": "Microsoft.AdaptiveDialog",
+    "$designer": {
+      "id": "eKkkY5",
+      "name": "ShowMap",
+      "description": ""
+    },
+    "autoEndDialog": true,
+    "defaultResultProperty": "dialog.result",
+    "triggers": [
+      {
+        "$kind": "Microsoft.OnBeginDialog",
+        "$designer": {
+          "name": "BeginDialog",
+          "description": "",
+          "id": "83LkaU"
+        },
+        "actions": [
+          {
+            "$kind": "Microsoft.BeginDialog",
+            "$designer": {
+              "id": "JsUPUZ"
+            },
+            "activityProcessed": true,
+            "dialog": "GetLocation"
+          },
+          {
+            "$kind": "Microsoft.IfCondition",
+            "$designer": {
+              "id": "gXdnZp"
+            },
+            "condition": "user.getLocationFailed",
+            "elseActions": [
+              {
+                "$kind": "Microsoft.SetProperty",
+                "$designer": {
+                  "id": "mdHhS7"
+                },
+                "property": "dialog.map.url",
+                "value": "https://atlas.microsoft.com/map/static/png?api-version=1.0&subscription-key=Wgwvb_OOzgsjYJXyjm-jPH8VL7jtZnBC6D46FcLm3mg&center=${user.addressPositionLon},${user.addressPositionLat}&pins=default||'YOU'${user.addressPositionLon}%20${user.addressPositionLat}"
+              },
+              {
+                "$kind": "Microsoft.SendActivity",
+                "$designer": {
+                  "id": "ocpyov"
+                },
+                "activity": "${SendActivity_ocpyov()}"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "generator": "ShowMap.lg",
+    "recognizer": "ShowMap.lu.qna",
+    "id": "ShowMap"
+  }

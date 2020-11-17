@@ -1,0 +1,150 @@
+{
+    "$kind": "Microsoft.AdaptiveDialog",
+    "$designer": {
+      "id": "Bkt0Q8",
+      "name": "CheckPatrols",
+      "description": ""
+    },
+    "autoEndDialog": true,
+    "defaultResultProperty": "dialog.result",
+    "triggers": [
+      {
+        "$kind": "Microsoft.OnBeginDialog",
+        "$designer": {
+          "name": "BeginDialog",
+          "description": "",
+          "id": "Cv6Jxl"
+        },
+        "actions": [
+          {
+            "$kind": "Microsoft.BeginDialog",
+            "$designer": {
+              "id": "bZ8uJH"
+            },
+            "activityProcessed": true,
+            "dialog": "GetLocation"
+          },
+          {
+            "$kind": "Microsoft.IfCondition",
+            "$designer": {
+              "id": "VcUCUr"
+            },
+            "condition": "user.getLocationFailed",
+            "elseActions": [
+              {
+                "$kind": "Microsoft.SendActivity",
+                "$designer": {
+                  "id": "bz3JLd"
+                },
+                "activity": "${SendActivity_bz3JLd()}"
+              },
+              {
+                "$kind": "Microsoft.SetProperty",
+                "$designer": {
+                  "id": "txxlEq"
+                },
+                "property": "dialog.c",
+                "value": "0"
+              },
+              {
+                "$kind": "Microsoft.SetProperty",
+                "$designer": {
+                  "id": "9fDhVf"
+                },
+                "property": "dialog.pins.text",
+                "value": "&pins=default||'YOU'${user.addressPositionLon} ${user.addressPositionLat}"
+              },
+              {
+                "$kind": "Microsoft.IfCondition",
+                "$designer": {
+                  "id": "Rjp3dH"
+                },
+                "condition": "exists(user.report.database.type)",
+                "actions": [
+                  {
+                    "$kind": "Microsoft.Foreach",
+                    "$designer": {
+                      "id": "yOAdYJ"
+                    },
+                    "index": "dialog.foreach.index",
+                    "value": "dialog.foreach.value",
+                    "itemsProperty": "user.report.database.type",
+                    "actions": [
+                      {
+                        "$kind": "Microsoft.HttpRequest",
+                        "$designer": {
+                          "id": "OGwjsp"
+                        },
+                        "method": "GET",
+                        "url": "https://api.mathjs.org/v4/?expr=sqrt((${user.report.database.lat[dialog.foreach.index]}%20-%20${user.addressPositionLat})%5E2%20%2B%20(${user.report.database.lon[dialog.foreach.index]}%20-%20${user.addressPositionLon})%5E2)",
+                        "resultProperty": "dialog.calculateDistanceResponse",
+                        "contentType": "application/text"
+                      },
+                      {
+                        "$kind": "Microsoft.IfCondition",
+                        "$designer": {
+                          "id": "XEWSOU"
+                        },
+                        "condition": "=float(dialog.calculateDistanceResponse.content) < 0.09",
+                        "actions": [
+                          {
+                            "$kind": "Microsoft.SetProperty",
+                            "$designer": {
+                              "id": "PMFvzC"
+                            },
+                            "property": "dialog.c",
+                            "value": "${int(dialog.c)+1}"
+                          },
+                          {
+                            "$kind": "Microsoft.SetProperty",
+                            "$designer": {
+                              "id": "OgH1mo"
+                            },
+                            "property": "dialog.pins.text",
+                            "value": "${dialog.pins.text}|'${dialog.foreach.value}'${user.report.database.lon[dialog.foreach.index]}%20${user.report.database.lat[dialog.foreach.index]}"
+                          },
+                          {
+                            "$kind": "Microsoft.IfCondition",
+                            "$designer": {
+                              "id": "OHQbAn"
+                            },
+                            "condition": "int(dialog.c) >=4",
+                            "actions": [
+                              {
+                                "$kind": "Microsoft.BreakLoop",
+                                "$designer": {
+                                  "id": "xUuDIe"
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "$kind": "Microsoft.SetProperty",
+                "$designer": {
+                  "id": "iO9nSa"
+                },
+                "property": "dialog.map.url",
+                "value": "https://atlas.microsoft.com/map/static/png?api-version=1.0&subscription-key=Wgwvb_OOzgsjYJXyjm-jPH8VL7jtZnBC6D46FcLm3mg&center=${user.addressPositionLon},${user.addressPositionLat}${dialog.pins.text}"
+              },
+              {
+                "$kind": "Microsoft.SendActivity",
+                "$designer": {
+                  "id": "N1ujNv"
+                },
+                "activity": "${SendActivity_N1ujNv()}"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "generator": "CheckPatrols.lg",
+    "recognizer": "CheckPatrols.lu.qna",
+    "id": "CheckPatrols"
+  }

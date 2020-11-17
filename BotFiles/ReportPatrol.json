@@ -1,0 +1,139 @@
+{
+  "$kind": "Microsoft.AdaptiveDialog",
+  "$designer": {
+    "id": "sGn9Nx",
+    "name": "ReportPatrol",
+    "description": ""
+  },
+  "autoEndDialog": true,
+  "defaultResultProperty": "dialog.result",
+  "triggers": [
+    {
+      "$kind": "Microsoft.OnBeginDialog",
+      "$designer": {
+        "name": "BeginDialog",
+        "description": "",
+        "id": "8jAFuE"
+      },
+      "actions": [
+        {
+          "$kind": "Microsoft.DeleteProperty",
+          "$designer": {
+            "id": "KIz53Z"
+          },
+          "property": "user.report.type"
+        },
+        {
+          "$kind": "Microsoft.BeginDialog",
+          "$designer": {
+            "id": "ACgSL9"
+          },
+          "activityProcessed": true,
+          "dialog": "GetLocation"
+        },
+        {
+          "$kind": "Microsoft.IfCondition",
+          "$designer": {
+            "id": "T3nsgC"
+          },
+          "condition": "user.getLocationFailed",
+          "elseActions": [
+            {
+              "$kind": "Microsoft.ChoiceInput",
+              "$designer": {
+                "id": "V8mnCr"
+              },
+              "defaultLocale": "en-us",
+              "disabled": false,
+              "maxTurnCount": 3,
+              "alwaysPrompt": false,
+              "allowInterruptions": false,
+              "prompt": "${ChoiceInput_Prompt_V8mnCr()}",
+              "unrecognizedPrompt": "",
+              "invalidPrompt": "",
+              "defaultValueResponse": "",
+              "choiceOptions": {
+                "includeNumbers": true,
+                "inlineOrMore": ", or ",
+                "inlineOr": " or ",
+                "inlineSeparator": ", "
+              },
+              "choices": [
+                {
+                  "value": "Auto"
+                },
+                {
+                  "value": "Motorbike"
+                },
+                {
+                  "value": "Incognito"
+                },
+                {
+                  "value": "Inspection"
+                }
+              ],
+              "property": "user.report.type"
+            },
+            {
+              "$kind": "Microsoft.SetProperties",
+              "$designer": {
+                "id": "yKTS82"
+              },
+              "assignments": [
+                {
+                  "property": "user.report.newRecord.lat",
+                  "value": "${user.addressPositionLat}"
+                },
+                {
+                  "property": "user.report.newRecord.lon",
+                  "value": "${user.addressPositionLon}"
+                },
+                {
+                  "property": "user.report.newRecord.type",
+                  "value": "${user.report.type}"
+                }
+              ]
+            },
+            {
+              "$kind": "Microsoft.EditArray",
+              "$designer": {
+                "id": "QsQAML"
+              },
+              "changeType": "push",
+              "itemsProperty": "user.report.database.lat",
+              "value": "${user.report.newRecord.lat}"
+            },
+            {
+              "$kind": "Microsoft.EditArray",
+              "$designer": {
+                "id": "Yjoq96"
+              },
+              "changeType": "push",
+              "itemsProperty": "user.report.database.lon",
+              "value": "${user.report.newRecord.lon}"
+            },
+            {
+              "$kind": "Microsoft.EditArray",
+              "$designer": {
+                "id": "XNxV8r"
+              },
+              "changeType": "push",
+              "itemsProperty": "user.report.database.type",
+              "value": "${user.report.newRecord.type}"
+            },
+            {
+              "$kind": "Microsoft.SendActivity",
+              "$designer": {
+                "id": "LAU5S4"
+              },
+              "activity": "${SendActivity_LAU5S4()}"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "generator": "ReportPatrol.lg",
+  "recognizer": "ReportPatrol.lu.qna",
+  "id": "ReportPatrol"
+}

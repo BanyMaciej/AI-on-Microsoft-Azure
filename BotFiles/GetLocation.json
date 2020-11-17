@@ -1,0 +1,349 @@
+{
+    "$kind": "Microsoft.AdaptiveDialog",
+    "$designer": {
+      "id": "4EdI0T",
+      "name": "GetLocation",
+      "description": ""
+    },
+    "autoEndDialog": true,
+    "defaultResultProperty": "dialog.result",
+    "triggers": [
+      {
+        "$kind": "Microsoft.OnBeginDialog",
+        "$designer": {
+          "name": "BeginDialog",
+          "description": "",
+          "id": "DUMZQo"
+        },
+        "actions": [
+          {
+            "$kind": "Microsoft.DeleteProperties",
+            "$designer": {
+              "id": "YTv5Td"
+            },
+            "properties": [
+              "user.fullAddress",
+              "user.possiblePositionsCount",
+              "dialog.searchAddressResponse",
+              "user.getLocationFailed"
+            ]
+          },
+          {
+            "$kind": "Microsoft.TextInput",
+            "$designer": {
+              "id": "0BDJJ3"
+            },
+            "disabled": false,
+            "maxTurnCount": 3,
+            "alwaysPrompt": false,
+            "allowInterruptions": false,
+            "prompt": "${TextInput_Prompt_0BDJJ3()}",
+            "unrecognizedPrompt": "",
+            "invalidPrompt": "",
+            "defaultValueResponse": "",
+            "property": "user.fullAddress"
+          },
+          {
+            "$kind": "Microsoft.HttpRequest",
+            "$designer": {
+              "id": "p8rK3w"
+            },
+            "method": "GET",
+            "url": "https://atlas.microsoft.com/search/address/JSON?api-version=1.0&query=${user.fullAddress}&subscription-key=Wgwvb_OOzgsjYJXyjm-jPH8VL7jtZnBC6D46FcLm3mg",
+            "contentType": "application/json",
+            "responseType": "json",
+            "resultProperty": "dialog.searchAddressResponse"
+          },
+          {
+            "$kind": "Microsoft.SetProperty",
+            "$designer": {
+              "id": "NlS3kc"
+            },
+            "property": "user.possiblePositionsCount",
+            "value": "${dialog.searchAddressResponse.content.summary.totalResults}"
+          },
+          {
+            "$kind": "Microsoft.SwitchCondition",
+            "$designer": {
+              "id": "tI7dSl"
+            },
+            "condition": "int(user.possiblePositionsCount)",
+            "cases": [
+              {
+                "value": "0",
+                "actions": [
+                  {
+                    "$kind": "Microsoft.DeleteProperties",
+                    "$designer": {
+                      "id": "dIfm4r"
+                    },
+                    "properties": [
+                      "user.fullAddress",
+                      "user.possiblePositionsCount",
+                      "dialog.searchAddressResponse"
+                    ]
+                  },
+                  {
+                    "$kind": "Microsoft.ConfirmInput",
+                    "$designer": {
+                      "id": "ymtSQL"
+                    },
+                    "defaultLocale": "en-us",
+                    "disabled": false,
+                    "maxTurnCount": 3,
+                    "alwaysPrompt": false,
+                    "allowInterruptions": false,
+                    "prompt": "${ConfirmInput_Prompt_ymtSQL()}",
+                    "unrecognizedPrompt": "",
+                    "invalidPrompt": "",
+                    "defaultValueResponse": "",
+                    "choiceOptions": {
+                      "includeNumbers": true,
+                      "inlineOrMore": ", or "
+                    },
+                    "property": "user.repeat.confirm",
+                    "confirmChoices": [
+                      {
+                        "value": "yes"
+                      },
+                      {
+                        "value": "no"
+                      }
+                    ]
+                  },
+                  {
+                    "$kind": "Microsoft.IfCondition",
+                    "$designer": {
+                      "id": "fI0JrT"
+                    },
+                    "condition": "user.repeat.confirm",
+                    "actions": [
+                      {
+                        "$kind": "Microsoft.RepeatDialog",
+                        "$designer": {
+                          "id": "5FJpco"
+                        },
+                        "activityProcessed": false,
+                        "allowLoop": true
+                      }
+                    ],
+                    "elseActions": [
+                      {
+                        "$kind": "Microsoft.SetProperty",
+                        "$designer": {
+                          "id": "lkUrNe"
+                        },
+                        "property": "user.getLocationFailed",
+                        "value": true
+                      },
+                      {
+                        "$kind": "Microsoft.EndDialog",
+                        "$designer": {
+                          "id": "vCHxul"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "value": "1",
+                "actions": [
+                  {
+                    "$kind": "Microsoft.SetProperties",
+                    "$designer": {
+                      "id": "FDY4kU"
+                    },
+                    "assignments": [
+                      {
+                        "property": "user.addressPositionLat",
+                        "value": "${dialog.searchAddressResponse.content.results[0].position.lat}"
+                      },
+                      {
+                        "property": "user.addressPositionLon",
+                        "value": "${dialog.searchAddressResponse.content.results[0].position.lon}"
+                      },
+                      {
+                        "property": "user.addressName",
+                        "value": "${dialog.searchAddressResponse.content.results[0].address.freeformAddress}"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "default": [
+              {
+                "$kind": "Microsoft.IfCondition",
+                "$designer": {
+                  "id": "SDf2ON"
+                },
+                "condition": "int(user.possiblePositionsCount) > 10",
+                "actions": [
+                  {
+                    "$kind": "Microsoft.DeleteProperties",
+                    "$designer": {
+                      "id": "L3vPzB"
+                    },
+                    "properties": [
+                      "user.fullAddress",
+                      "user.possiblePositionsCount",
+                      "dialog.searchAddressResponse"
+                    ]
+                  },
+                  {
+                    "$kind": "Microsoft.ConfirmInput",
+                    "$designer": {
+                      "id": "YFasTY"
+                    },
+                    "defaultLocale": "en-us",
+                    "disabled": false,
+                    "maxTurnCount": 3,
+                    "alwaysPrompt": false,
+                    "allowInterruptions": false,
+                    "prompt": "${ConfirmInput_Prompt_YFasTY()}",
+                    "unrecognizedPrompt": "",
+                    "invalidPrompt": "",
+                    "defaultValueResponse": "",
+                    "choiceOptions": {
+                      "includeNumbers": true,
+                      "inlineOrMore": ", or "
+                    },
+                    "property": "user.repeat.confirm",
+                    "confirmChoices": [
+                      {
+                        "value": "yes"
+                      },
+                      {
+                        "value": "no"
+                      }
+                    ]
+                  },
+                  {
+                    "$kind": "Microsoft.IfCondition",
+                    "$designer": {
+                      "id": "YwWc6X"
+                    },
+                    "condition": "user.repeat.confirm",
+                    "actions": [
+                      {
+                        "$kind": "Microsoft.RepeatDialog",
+                        "$designer": {
+                          "id": "mLvult"
+                        },
+                        "activityProcessed": false,
+                        "allowLoop": true
+                      }
+                    ],
+                    "elseActions": [
+                      {
+                        "$kind": "Microsoft.SetProperty",
+                        "$designer": {
+                          "id": "FvFgDh"
+                        },
+                        "property": "user.getLocationFailed",
+                        "value": true
+                      },
+                      {
+                        "$kind": "Microsoft.EndDialog",
+                        "$designer": {
+                          "id": "xKJd3D"
+                        }
+                      }
+                    ]
+                  }
+                ],
+                "elseActions": [
+                  {
+                    "$kind": "Microsoft.Foreach",
+                    "$designer": {
+                      "id": "nPHJ69"
+                    },
+                    "index": "dialog.foreach.index",
+                    "value": "dialog.foreach.value",
+                    "itemsProperty": "dialog.searchAddressResponse.content.results",
+                    "actions": [
+                      {
+                        "$kind": "Microsoft.EditArray",
+                        "$designer": {
+                          "id": "pqLafi"
+                        },
+                        "changeType": "push",
+                        "itemsProperty": "dialog.currentPositionOptions",
+                        "value": "${dialog.foreach.value.address.freeformAddress}"
+                      }
+                    ]
+                  },
+                  {
+                    "$kind": "Microsoft.ChoiceInput",
+                    "$designer": {
+                      "id": "cxzaGs"
+                    },
+                    "defaultLocale": "en-us",
+                    "disabled": false,
+                    "maxTurnCount": 3,
+                    "alwaysPrompt": false,
+                    "allowInterruptions": false,
+                    "unrecognizedPrompt": "",
+                    "invalidPrompt": "",
+                    "defaultValueResponse": "",
+                    "recognizerOptions": {
+                      "recognizeOrdinals": true,
+                      "recognizeNumbers": true
+                    },
+                    "property": "dialog.addressIndex",
+                    "choices": "dialog.currentPositionOptions",
+                    "choiceOptions": {
+                      "includeNumbers": true,
+                      "inlineOrMore": ", or ",
+                      "inlineOr": " or ",
+                      "inlineSeparator": ", "
+                    },
+                    "outputFormat": "index",
+                    "style": "auto",
+                    "prompt": "${ChoiceInput_Prompt_cxzaGs()}"
+                  },
+                  {
+                    "$kind": "Microsoft.SetProperties",
+                    "$designer": {
+                      "id": "jEV9xO"
+                    },
+                    "assignments": [
+                      {
+                        "property": "user.addressPositionLat",
+                        "value": "${dialog.searchAddressResponse.content.results[int(dialog.addressIndex)].position.lat}"
+                      },
+                      {
+                        "property": "user.addressPositionLon",
+                        "value": "${dialog.searchAddressResponse.content.results[int(dialog.addressIndex)].position.lon}"
+                      },
+                      {
+                        "property": "user.addressName",
+                        "value": "${dialog.searchAddressResponse.content.results[int(dialog.addressIndex)].address.freeformAddress}"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "$kind": "Microsoft.SendActivity",
+            "$designer": {
+              "id": "QNqjTq"
+            },
+            "activity": "${SendActivity_QNqjTq()}"
+          },
+          {
+            "$kind": "Microsoft.EndDialog",
+            "$designer": {
+              "id": "D5QpZY"
+            }
+          }
+        ]
+      }
+    ],
+    "generator": "GetLocation.lg",
+    "recognizer": "GetLocation.lu.qna",
+    "id": "GetLocation"
+  }

@@ -1,0 +1,205 @@
+{
+    "$kind": "Microsoft.AdaptiveDialog",
+    "$designer": {
+      "id": "0GRhej",
+      "name": "Menu",
+      "description": ""
+    },
+    "autoEndDialog": true,
+    "defaultResultProperty": "dialog.result",
+    "triggers": [
+      {
+        "$kind": "Microsoft.OnBeginDialog",
+        "$designer": {
+          "name": "BeginDialog",
+          "description": "",
+          "id": "9vS6T8"
+        },
+        "actions": [
+          {
+            "$kind": "Microsoft.ChoiceInput",
+            "$designer": {
+              "id": "no82BH"
+            },
+            "defaultLocale": "en-us",
+            "disabled": false,
+            "maxTurnCount": 3,
+            "alwaysPrompt": false,
+            "allowInterruptions": false,
+            "prompt": "${ChoiceInput_Prompt_no82BH()}",
+            "unrecognizedPrompt": "",
+            "invalidPrompt": "",
+            "defaultValueResponse": "",
+            "choiceOptions": {
+              "includeNumbers": true,
+              "inlineOrMore": ", or ",
+              "inlineOr": " or ",
+              "inlineSeparator": ", "
+            },
+            "property": "user.choice",
+            "outputFormat": "value",
+            "choices": [
+              {
+                "value": "Show me on map",
+                "synonyms": [
+                  "show map",
+                  "display map",
+                  "show me"
+                ]
+              },
+              {
+                "synonyms": [
+                  "Report",
+                  "there is patrol",
+                  "there was patrol",
+                  "i saw patrol"
+                ],
+                "value": "Report patrol"
+              },
+              {
+                "value": "Check patrols",
+                "synonyms": [
+                  "Are there patrols?",
+                  "check for patrols",
+                  "check"
+                ]
+              },
+              {
+                "value": "Finish",
+                "synonyms": [
+                  "End",
+                  "Quit",
+                  "Exit"
+                ]
+              }
+            ],
+            "style": "heroCard",
+            "recognizerOptions": {
+              "recognizeOrdinals": true
+            }
+          },
+          {
+            "$kind": "Microsoft.SwitchCondition",
+            "$designer": {
+              "id": "ftAmWC"
+            },
+            "condition": "user.choice",
+            "cases": [
+              {
+                "value": "Show me on map",
+                "actions": [
+                  {
+                    "$kind": "Microsoft.BeginDialog",
+                    "$designer": {
+                      "id": "gikevV"
+                    },
+                    "activityProcessed": true,
+                    "dialog": "ShowMap"
+                  },
+                  {
+                    "$kind": "Microsoft.DeleteProperty",
+                    "$designer": {
+                      "id": "G606PJ"
+                    },
+                    "property": "user.choice"
+                  },
+                  {
+                    "$kind": "Microsoft.RepeatDialog",
+                    "$designer": {
+                      "id": "Vm4lOe"
+                    },
+                    "activityProcessed": true
+                  }
+                ]
+              },
+              {
+                "value": "Check patrols",
+                "actions": [
+                  {
+                    "$kind": "Microsoft.BeginDialog",
+                    "$designer": {
+                      "id": "WKcs8i"
+                    },
+                    "activityProcessed": true,
+                    "dialog": "CheckPatrols"
+                  },
+                  {
+                    "$kind": "Microsoft.DeleteProperty",
+                    "$designer": {
+                      "id": "Pld0aV"
+                    },
+                    "property": "user.choice"
+                  },
+                  {
+                    "$kind": "Microsoft.RepeatDialog",
+                    "$designer": {
+                      "id": "Dl1T47"
+                    },
+                    "activityProcessed": true
+                  }
+                ]
+              },
+              {
+                "value": "Report patrol",
+                "actions": [
+                  {
+                    "$kind": "Microsoft.BeginDialog",
+                    "$designer": {
+                      "id": "Xzks3N"
+                    },
+                    "activityProcessed": true,
+                    "dialog": "ReportPatrol"
+                  },
+                  {
+                    "$kind": "Microsoft.DeleteProperty",
+                    "$designer": {
+                      "id": "fXw3Wg"
+                    },
+                    "property": "user.choice"
+                  },
+                  {
+                    "$kind": "Microsoft.RepeatDialog",
+                    "$designer": {
+                      "id": "YS95cR"
+                    },
+                    "activityProcessed": true
+                  }
+                ]
+              },
+              {
+                "value": "Finish",
+                "actions": []
+              }
+            ],
+            "default": [
+              {
+                "$kind": "Microsoft.SendActivity",
+                "$designer": {
+                  "id": "0duXFh"
+                },
+                "activity": "${SendActivity_0duXFh()}"
+              },
+              {
+                "$kind": "Microsoft.RepeatDialog",
+                "$designer": {
+                  "id": "3Tb6wB"
+                },
+                "activityProcessed": true,
+                "options": {}
+              }
+            ]
+          },
+          {
+            "$kind": "Microsoft.SendActivity",
+            "$designer": {
+              "id": "lWst5e"
+            },
+            "activity": "${SendActivity_lWst5e()}"
+          }
+        ]
+      }
+    ],
+    "generator": "Menu.lg",
+    "recognizer": "Menu.lu.qna",
+    "id": "Menu"
+  }
