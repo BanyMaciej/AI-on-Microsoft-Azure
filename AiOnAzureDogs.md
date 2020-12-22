@@ -39,4 +39,5 @@ Usage of service was also tested using http requests using program Postman. All 
 Test has been done with downloaded image of [Beagle](https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Beagle_Faraon.JPG/1200px-Beagle_Faraon.JPG). 
 Again, model correctly recogized breed - prediction value for beagle is greater than 0.5.
 ![Beagle](https://github.com/BanyMaciej/AI-on-Microsoft-Azure/raw/main/Assets/AzurePredictionTestBeagle.png)
-
+#### Video presentation
+ideo presentation of the solution (in polish): https://youtu.be/uOh867XiIh0
